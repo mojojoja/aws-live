@@ -186,22 +186,22 @@ def DeleteEmp():
     return render_template('DelEmpOut.html', emp_id=emp_id)
     
 #get employee
-@app.route("/getemp", methods=['GET','POST'])
+@app.route("/staffDet", methods=['GET','POST'])
 def GetEmpData():
-    emp_id = request.form['emp_id']
+    
     mycursor = db_conn.cursor()
-    getempdata = "select * from employee WHERE emp_id = %s"
-    mycursor.execute(getempdata,(emp_id))
+    getempdata = "select * from employee"
+    mycursor.execute(getempdata)
     result = mycursor.fetchall()
-    (emp_id, first_name, last_name, pri_skill, location, email, phone_num, position, hire_date, salary, benefit) = result[0]   
-    image_url = showimage(bucket)
+    (emp_id, first_name, last_name, pri_skill, location, email, phone_num, position, hire_date, salary, benefit) = result[0]
     
     try:
-        employee = getempdata.query.filter_by(pri_skill).order_by(emp_id).all()
+        employee = getempdata.query.filter_by(first_name).order_by(emp_id).all()
         first_name = '<ul>'
         for getempdata in employee:
-            emp_id +='<li>' + first_name + ', ' last_name', '+ pri_skill +', '+ location +', '+ email + ', ' + phone_num + ', ' + position + ', ' + hire_date + ', ' + salary + ', ' + benefit + '</li>
-         first_name += '<ul>'
+            emp_id +='<li>' + getempdata.first_name + ', ' + getempdata.last_name + ', ' + getempdata.pri_skill + ', ' + getempdata.location + ', ' + getempdata.email + ', ' + getempdata.phone_num + ', ' + getempdata.position + ', ' + getempdata.hire_date + ', ' + getempdata.salary + ', ' + getempdata.benefit + '</li>'
+        first_name += '</ul>'
+        return first_name
     
     except Exception as e:
         # e holds description of the error
